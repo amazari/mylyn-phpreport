@@ -1,8 +1,13 @@
 package com.igalia.phpreport.mylyn;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import com.igalia.phpreport.mylyn.internal.phpreport.PHPReport;
+import com.igalia.phpreport.mylyn.internal.preferences.PreferenceConstants;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -14,6 +19,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+	
+	private PHPReport phpReport;
 
 	/**
 	 * The constructor
@@ -66,5 +73,16 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
+
+	public IStatus connect() {
+		IPreferenceStore store = getPreferenceStore();
+		this.phpReport = new PHPReport(
+				store.getString(PreferenceConstants.PHPREPORT_URL),
+				store.getString(PreferenceConstants.PHPREPORT_USERNAME),
+				store.getString(PreferenceConstants.PHPREPORT_PASSWORD),
+				store.getBoolean(PreferenceConstants.PHPREPORT_TELEWORKING));
+
+		return phpReport.connect();
 	}
 }

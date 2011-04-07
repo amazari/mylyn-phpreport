@@ -3,6 +3,7 @@ package com.igalia.phpreport.mylyn.internal.phpreport;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -24,7 +25,6 @@ import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.ui.statushandlers.StatusManager;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.igalia.phpreport.mylyn.Activator;
 import com.igalia.phpreport.mylyn.Messages;
@@ -55,10 +55,9 @@ public class PHPReport {
 		create_task_location.setCredentials(AuthenticationType.HTTP, username,
 				password);
 		this.httpClient = createHttpClient(null);
-		connect();
 	}
 
-	public void connect() {
+	public IStatus connect() {
 		IStatus status = null;
 
 		GetMethod method = new GetMethod(authentication_location.getUrl());
@@ -73,10 +72,9 @@ public class PHPReport {
 
 		status = sendRequest(status, method, create_task_location, handler, 
 				Messages.PHPReport_AUTH_FAILED, Messages.PHPReport_AUTH_SUCCESS);
-
-		StatusManager.getManager().handle(status);
-
 		token = handler.getToken();
+		
+		return status;
 	}
 
 	public boolean isConnected() {
@@ -114,7 +112,7 @@ public class PHPReport {
 		} catch (UnsupportedEncodingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} //$NON-NLS-1$ //$NON-NLS-2$
+		} 
 		method.setQueryString(new NameValuePair[] { new NameValuePair(
 				"sid", token), //$NON-NLS-1$
 		});

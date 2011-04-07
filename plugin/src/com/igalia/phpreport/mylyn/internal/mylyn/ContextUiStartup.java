@@ -1,5 +1,6 @@
 package com.igalia.phpreport.mylyn.internal.mylyn;
 
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -22,10 +23,9 @@ public class ContextUiStartup implements IContextUiStartup {
 
 		store.addPropertyChangeListener(new IPropertyChangeListener() {
 
-			@Override
 			public void propertyChange(PropertyChangeEvent arg0) {
 			
-				if (arg0.getProperty() == PreferenceConstants.PHPREPORT_ENABLED) {
+				if (arg0.getProperty().equals( PreferenceConstants.PHPREPORT_ENABLED)) {
 					boolean enabled = (Boolean) arg0.getNewValue();
 
 					if (enabled) {
