@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="Mylyn-PHPReport integration update site" url="http://people.igalia.com/amazari/mylyn-phpreport-latest/">
+      Mylyn-PHPReport integration update site
+   </description>
+   <feature url="features/com.igalia.phpreport.mylyn.feature_1.0.0.201104071446.jar" id="com.igalia.phpreport.mylyn.feature" version="1.0.0.201104071446">
+      <category name="mylyn-phpreport-integration"/>
+   </feature>
+   <category-def name="mylyn-phpreport-integration" label="Mylyn-PHPReport integration"/>
+</site>
