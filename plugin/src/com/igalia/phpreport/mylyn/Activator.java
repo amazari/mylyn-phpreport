@@ -1,4 +1,4 @@
-package com.igalia.phpreport.mylyn.internal;
+package com.igalia.phpreport.mylyn;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

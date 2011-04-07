@@ -26,8 +26,8 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.igalia.phpreport.mylyn.internal.Activator;
-import com.igalia.phpreport.mylyn.internal.Messages;
+import com.igalia.phpreport.mylyn.Activator;
+import com.igalia.phpreport.mylyn.Messages;
 
 public class PHPReport {
 

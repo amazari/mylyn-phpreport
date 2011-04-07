@@ -5,9 +5,10 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            name="%page.name"
+            category="org.eclipse.mylyn.preferencePages.Mylyn"
             class="com.igalia.phpreport.mylyn.internal.preferences.PHPReportPreferencePage"
-            id="com.igalia.phpreport.mylyn.preferences.PHPReportPreferencePage">
+            id="com.igalia.phpreport.mylyn.preferences.PHPReportPreferencePage"
+            name="%page.name">
       </page>
    </extension>
    <extension

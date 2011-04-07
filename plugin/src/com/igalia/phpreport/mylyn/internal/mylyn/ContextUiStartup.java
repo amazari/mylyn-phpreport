@@ -7,7 +7,7 @@ import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
-import com.igalia.phpreport.mylyn.internal.Activator;
+import com.igalia.phpreport.mylyn.Activator;
 import com.igalia.phpreport.mylyn.internal.phpreport.PHPReport;
 import com.igalia.phpreport.mylyn.internal.preferences.PreferenceConstants;
 

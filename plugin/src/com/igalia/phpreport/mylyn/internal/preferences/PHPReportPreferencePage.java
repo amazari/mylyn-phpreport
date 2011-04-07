@@ -4,7 +4,7 @@ import org.eclipse.jface.preference.*;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
 
-import com.igalia.phpreport.mylyn.internal.Activator;
+import com.igalia.phpreport.mylyn.Activator;
 
 /**
  * This class represents a preference page that
