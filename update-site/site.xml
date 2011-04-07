@@ -3,7 +3,7 @@
    <description name="Mylyn-PHPReport integration update site" url="http://people.igalia.com/amazari/mylyn-phpreport-latest/">
       Mylyn-PHPReport integration update site
    </description>
-   <feature url="features/com.igalia.phpreport.mylyn.feature_1.0.0.201104071523.jar" id="com.igalia.phpreport.mylyn.feature" version="1.0.0.201104071523">
+   <feature url="features/com.igalia.phpreport.mylyn.feature_1.0.0.201104071544.jar" id="com.igalia.phpreport.mylyn.feature" version="1.0.0.201104071544">
       <category name="mylynphpreportintegration"/>
    </feature>
    <category-def name="mylynphpreportintegration" label="Mylyn-PHPReport integration"/>
