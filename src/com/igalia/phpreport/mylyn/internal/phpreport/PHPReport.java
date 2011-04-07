@@ -1,4 +1,4 @@
-package com.igalia.phpreport.mylyn;
+package com.igalia.phpreport.mylyn.internal.phpreport;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -25,6 +25,9 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.xml.sax.helpers.DefaultHandler;
+
+import com.igalia.phpreport.mylyn.internal.Activator;
+import com.igalia.phpreport.mylyn.internal.Messages;
 
 public class PHPReport {
 

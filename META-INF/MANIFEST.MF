@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PHPReport Mylyn integration
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.igalia.phpreport.mylyn; singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.igalia.phpreport.mylyn.Activator
-Bundle-Vendor: IGALIA
+Bundle-Activator: com.igalia.phpreport.mylyn.internal.Activator
+Bundle-Vendor: Igalia S.L.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.mylyn.context.ui,
@@ -13,3 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.tasks.ui;bundle-version="3.4.3"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Export-Package: com.igalia.phpreport.mylyn.internal;x-internal:=true,
+ com.igalia.phpreport.mylyn.internal.mylyn;x-internal:=true,
+ com.igalia.phpreport.mylyn.internal.phpreport;x-internal:=true,
+ com.igalia.phpreport.mylyn.internal.preferences;x-internal:=true

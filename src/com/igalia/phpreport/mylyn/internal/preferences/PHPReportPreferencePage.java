@@ -1,9 +1,10 @@
-package com.igalia.phpreport.mylyn.preferences;
+package com.igalia.phpreport.mylyn.internal.preferences;
 
 import org.eclipse.jface.preference.*;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
-import com.igalia.phpreport.mylyn.Activator;
+
+import com.igalia.phpreport.mylyn.internal.Activator;
 
 /**
  * This class represents a preference page that

@@ -1,9 +1,11 @@
-package com.igalia.phpreport.mylyn;
+package com.igalia.phpreport.mylyn.internal.mylyn;
 
 import java.util.Date;
 
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
+
+import com.igalia.phpreport.mylyn.internal.phpreport.PHPReport;
 
 final class TaskActivationListener implements
 		ITaskActivationListener {

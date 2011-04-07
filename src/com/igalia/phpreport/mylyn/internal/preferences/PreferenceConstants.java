@@ -1,4 +1,4 @@
-package com.igalia.phpreport.mylyn.preferences;
+package com.igalia.phpreport.mylyn.internal.preferences;
 
 /**
  * Constant definitions for plug-in preferences

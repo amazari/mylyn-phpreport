@@ -1,4 +1,4 @@
-package com.igalia.phpreport.mylyn;
+package com.igalia.phpreport.mylyn.internal.phpreport;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

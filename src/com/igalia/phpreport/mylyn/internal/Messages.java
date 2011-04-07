@@ -1,4 +1,4 @@
-package com.igalia.phpreport.mylyn;
+package com.igalia.phpreport.mylyn.internal;
 
 import org.eclipse.osgi.util.NLS;
 

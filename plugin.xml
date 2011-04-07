@@ -5,21 +5,21 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            name="PHPReport"
-            class="com.igalia.phpreport.mylyn.preferences.PHPReportPreferencePage"
+            name="%page.name"
+            class="com.igalia.phpreport.mylyn.internal.preferences.PHPReportPreferencePage"
             id="com.igalia.phpreport.mylyn.preferences.PHPReportPreferencePage">
       </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="com.igalia.phpreport.mylyn.preferences.PreferenceInitializer">
+            class="com.igalia.phpreport.mylyn.internal.preferences.PreferenceInitializer">
       </initializer>
    </extension>
    <extension
          point="org.eclipse.mylyn.context.ui.startup">
       <startup
-            class="com.igalia.phpreport.mylyn.ContextUiStartup">
+            class="com.igalia.phpreport.mylyn.internal.mylyn.ContextUiStartup">
       </startup>
    </extension>
 

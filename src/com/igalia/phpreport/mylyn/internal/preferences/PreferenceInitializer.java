@@ -1,9 +1,9 @@
-package com.igalia.phpreport.mylyn.preferences;
+package com.igalia.phpreport.mylyn.internal.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
-import com.igalia.phpreport.mylyn.Activator;
+import com.igalia.phpreport.mylyn.internal.Activator;
 
 /**
  * Class used to initialize default preference values.
