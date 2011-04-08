@@ -1,13 +1,10 @@
 package com.igalia.phpreport.mylyn.internal.preferences;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -40,7 +37,6 @@ public class PHPReportPreferencePage extends FieldEditorPreferencePage
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription("PHPReport Preferences");
-		System.out.println("ctor");
 	}
 
 	/**
@@ -50,16 +46,14 @@ public class PHPReportPreferencePage extends FieldEditorPreferencePage
 	 */
 	@Override
 	public void createFieldEditors() {
-
-		System.out.println("cfields");
 		final Composite parent = getFieldEditorParent();
 
 		enabledEditor = new BooleanFieldEditor(
 				PreferenceConstants.PHPREPORT_ENABLED,
 				"&Send Tasks infos to PHPReport ?", parent);
 
-		urlEditor = new StringFieldEditor(
-				PreferenceConstants.PHPREPORT_URL, "&PHPReport URL:", parent);
+		urlEditor = new StringFieldEditor(PreferenceConstants.PHPREPORT_URL,
+				"&PHPReport URL:", parent);
 		usernameEditor = new StringFieldEditor(
 				PreferenceConstants.PHPREPORT_USERNAME, "&username:", parent);
 		passwordFieldEditor = new StringFieldEditor(
@@ -76,52 +70,53 @@ public class PHPReportPreferencePage extends FieldEditorPreferencePage
 		addField(usernameEditor);
 		addField(passwordFieldEditor);
 		addField(teleworkEditor);
-		
-		boolean enabled = (Boolean)getPreferenceStore().getBoolean(PreferenceConstants.PHPREPORT_ENABLED);
-		
+
+		boolean enabled = getPreferenceStore().getBoolean(
+				PreferenceConstants.PHPREPORT_ENABLED);
+
 		urlEditor.setEnabled(enabled, parent);
 		usernameEditor.setEnabled(enabled, parent);
 		passwordFieldEditor.setEnabled(enabled, parent);
 		teleworkEditor.setEnabled(enabled, parent);
 	}
 
-	
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getSource() != enabledEditor)
 			return;
 		final Composite parent = getFieldEditorParent();
 		boolean enabled = (Boolean) event.getNewValue();
-		
+
 		urlEditor.setEnabled(enabled, parent);
 		usernameEditor.setEnabled(enabled, parent);
 		passwordFieldEditor.setEnabled(enabled, parent);
 		teleworkEditor.setEnabled(enabled, parent);
-	
+
 		super.propertyChange(event);
 	}
-
-
 
 	@Override
 	protected void performApply() {
 		super.performApply();
-		
-		boolean enabled = (Boolean)getPreferenceStore().getBoolean(PreferenceConstants.PHPREPORT_ENABLED);
-		
+
+		boolean enabled = getPreferenceStore().getBoolean(
+				PreferenceConstants.PHPREPORT_ENABLED);
+
 		if (enabled == false)
 			return;
-		
-		IStatus status = Activator.getDefault().connect();	
+
+		Activator.getDefault().setEnabled(enabled);
+
+		IStatus status = Activator.getDefault().getStatus();
 		if (status.isOK())
 			setMessage(status.getMessage());
 		else
-			setErrorMessage(status.getMessage());	
+			setErrorMessage(status.getMessage());
 	}
 
 	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

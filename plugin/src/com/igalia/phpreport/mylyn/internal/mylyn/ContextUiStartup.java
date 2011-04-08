@@ -1,71 +1,50 @@
 package com.igalia.phpreport.mylyn.internal.mylyn;
 
-
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 import com.igalia.phpreport.mylyn.Activator;
-import com.igalia.phpreport.mylyn.internal.phpreport.PHPReport;
-import com.igalia.phpreport.mylyn.internal.preferences.PreferenceConstants;
 
 public class ContextUiStartup implements IContextUiStartup {
-	
+
 	protected TaskActivationListener listener;
+
+	public void setEnabled(boolean enabled) {
+		System.out.println("Context enabled:" + enabled);
+		ITaskActivityManager activityManager = TasksUi.getTaskActivityManager();
+		if (enabled) {
+			if (listener == null)
+				listener = new TaskActivationListener();
+
+			listener.setPhpReport(Activator.getDefault().getTracker());
+			activityManager.addActivationListener(listener);
+		} else {
+			if (listener != null) {
+
+				activityManager.removeActivationListener(listener);
+				listener = null;
+			}
+		}
+	}
+
+	public boolean isEnabled() {
+		return listener != null && listener.getTracker().isConnected();
+	}
 
 	@Override
 	public void lazyStartup() {
+		DataBindingContext bindingContext = new DataBindingContext();
 
-		final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		IObservableValue activatorEnabledValue = PojoProperties.value(
+				Activator.class, "enabled").observe(Activator.getDefault());
+		IObservableValue contextEnabledValue = PojoProperties.value(
+				ContextUiStartup.class, "enabled").observe(this);
 
-		store.addPropertyChangeListener(new IPropertyChangeListener() {
-
-			public void propertyChange(PropertyChangeEvent arg0) {
-			
-				if (arg0.getProperty().equals( PreferenceConstants.PHPREPORT_ENABLED)) {
-					boolean enabled = (Boolean) arg0.getNewValue();
-
-					if (enabled) {
-						PHPReport phpReport = createPhpReport(store);
-						listener = new TaskActivationListener(phpReport);
-						ITaskActivityManager activityManager = TasksUi
-								.getTaskActivityManager();
-						activityManager.addActivationListener(listener);
-
-					} else {
-						ITaskActivityManager activityManager = TasksUi
-								.getTaskActivityManager();
-						activityManager.removeActivationListener(listener);
-						listener = null;
-					}
-				}
-				else 
-				{
-					PHPReport phpReport = createPhpReport(store);
-					listener.setPhpReport (phpReport);
-					
-				}
-			}
-
-			private PHPReport createPhpReport(final IPreferenceStore store) {
-				PHPReport phpReport = new PHPReport(
-						store.getString(PreferenceConstants.PHPREPORT_URL),
-						store.getString(PreferenceConstants.PHPREPORT_USERNAME),
-						store.getString(PreferenceConstants.PHPREPORT_PASSWORD),
-						store.getBoolean(PreferenceConstants.PHPREPORT_TELEWORKING));
-				return phpReport;
-			}
-		});
-
-		boolean enabled = store
-				.getBoolean(PreferenceConstants.PHPREPORT_ENABLED);
-		store.firePropertyChangeEvent(PreferenceConstants.PHPREPORT_ENABLED,
-				!enabled, enabled);
-
-
+		bindingContext.bindValue(contextEnabledValue, activatorEnabledValue);
 	}
 
 }

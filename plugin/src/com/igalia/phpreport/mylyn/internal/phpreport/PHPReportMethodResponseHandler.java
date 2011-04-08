@@ -3,7 +3,8 @@ package com.igalia.phpreport.mylyn.internal.phpreport;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-final class PHPReportMethodResponseHandler extends PHPReportErrorResponseHandler {
+final class PHPReportMethodResponseHandler extends
+		PHPReportErrorResponseHandler {
 
 	private StringBuilder characters;
 	boolean success = false;
@@ -27,8 +28,7 @@ final class PHPReportMethodResponseHandler extends PHPReportErrorResponseHandler
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
-		if ("success".equals(qName))
-		{
+		if ("success".equals(qName)) {
 			success = Boolean.parseBoolean(characters.toString());
 			characters = null;
 		}

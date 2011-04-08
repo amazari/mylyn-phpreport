@@ -24,12 +24,11 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.igalia.phpreport.mylyn.Activator;
 import com.igalia.phpreport.mylyn.Messages;
 
-public class PHPReport {
+public class PHPReport implements TasksTracker {
 
 	HttpClient httpClient;
 
@@ -38,6 +37,7 @@ public class PHPReport {
 
 	WebLocation authentication_location;
 	WebLocation create_task_location;
+	IStatus status;
 
 	String token;
 
@@ -57,8 +57,14 @@ public class PHPReport {
 		this.httpClient = createHttpClient(null);
 	}
 
-	public IStatus connect() {
-		IStatus status = null;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.igalia.phpreport.mylyn.internal.phpreport.TasksTracker#authenticate()
+	 */
+	@Override
+	public IStatus authenticate() {
 
 		GetMethod method = new GetMethod(authentication_location.getUrl());
 
@@ -70,27 +76,38 @@ public class PHPReport {
 
 		PHPReportAuthenticationResponseHandler handler = new PHPReportAuthenticationResponseHandler();
 
-		status = sendRequest(status, method, create_task_location, handler, 
+		status = sendRequest(method, create_task_location, handler,
 				Messages.PHPReport_AUTH_FAILED, Messages.PHPReport_AUTH_SUCCESS);
 		token = handler.getToken();
-		
+
 		return status;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.igalia.phpreport.mylyn.internal.phpreport.TasksTracker#isConnected()
+	 */
+	@Override
 	public boolean isConnected() {
 		return token != null;
 	}
 
-	public void addTask(ITask task, Date begin, Date end) {
-		IStatus status = null;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.igalia.phpreport.mylyn.internal.phpreport.TasksTracker#addTask(org
+	 * .eclipse.mylyn.tasks.core.ITask, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public IStatus addTask(ITask task, Date begin, Date end) {
 
-		if (isConnected() == false) {
-			status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+		if (isConnected() == false)
+			return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
 					Messages.PHPReport_TASK_SYNC_FAILED
 							+ Messages.PHPReport_NOT_AUTHENTICATED);
-			StatusManager.getManager().handle(status);
-			return;
-		}
 
 		PostMethod method = new PostMethod(create_task_location.getUrl());
 		String taskXmlRepresentation = String.format(
@@ -105,28 +122,29 @@ public class PHPReport {
 				DateFormatUtils.format(begin, "HH:mm"), //$NON-NLS-1$
 				DateFormatUtils.format(end, "HH:mm"), //$NON-NLS-1$
 				task.getUrl(), task.getSummary(), teleworking);
-		
+
 		try {
 			method.setRequestEntity(new StringRequestEntity(
 					taskXmlRepresentation, "text/xml", "UTF-8"));
 		} catch (UnsupportedEncodingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} 
+		}
 		method.setQueryString(new NameValuePair[] { new NameValuePair(
 				"sid", token), //$NON-NLS-1$
 		});
 
 		PHPReportMethodResponseHandler responseHandler = new PHPReportMethodResponseHandler();
 
-		status = sendRequest(status, method, create_task_location, responseHandler, 
-				Messages.PHPReport_TASK_SYNC_FAILED, Messages.PHPReport_TASK_SYNC_SUCCESS);
+		return sendRequest(method, create_task_location, responseHandler,
+				Messages.PHPReport_TASK_SYNC_FAILED,
+				Messages.PHPReport_TASK_SYNC_SUCCESS);
 
-		StatusManager.getManager().handle(status);
 	}
 
-	private IStatus sendRequest(IStatus status, HttpMethodBase method, WebLocation location,
-			PHPReportErrorResponseHandler responseHandler, String failMessage, String successMessage) {
+	private IStatus sendRequest(HttpMethodBase method, WebLocation location,
+			PHPReportErrorResponseHandler responseHandler, String failMessage,
+			String successMessage) {
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(
 				httpClient, location, null);
 		try {
@@ -142,7 +160,8 @@ public class PHPReport {
 				parser.parse(response, responseHandler);
 			} else
 				status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-						failMessage + Messages.PHPReport_HTTP_ERROR + httpStatus);
+						failMessage + Messages.PHPReport_HTTP_ERROR
+								+ httpStatus);
 
 		} catch (Exception e) {
 			status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
@@ -152,14 +171,13 @@ public class PHPReport {
 				return status;
 			if (responseHandler.isSucceed() == false)
 				status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-						failMessage
-								+ Messages.PHPReport_SERVER_RESPONDED
+						failMessage + Messages.PHPReport_SERVER_RESPONDED
 								+ responseHandler.getErrorMessage());
 			else
 				status = new Status(IStatus.OK, Activator.PLUGIN_ID,
 						successMessage);
 			return status;
-			}
+		}
 	}
 
 	private HttpClient createHttpClient(String userAgent) {
@@ -168,5 +186,10 @@ public class PHPReport {
 		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 		WebUtil.configureHttpClient(httpClient, userAgent);
 		return httpClient;
+	}
+
+	@Override
+	public IStatus getStatus() {
+		return status;
 	}
 }

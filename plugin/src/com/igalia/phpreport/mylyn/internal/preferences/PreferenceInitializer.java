@@ -13,13 +13,16 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
+	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
+	 * initializeDefaultPreferences()
 	 */
+	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.PHPREPORT_ENABLED, false);
 		store.setDefault(PreferenceConstants.PHPREPORT_TELEWORKING, false);
-		store.setDefault(PreferenceConstants.PHPREPORT_URL, "https://phpreport.igalia.com/");
+		store.setDefault(PreferenceConstants.PHPREPORT_URL,
+				"https://phpreport.igalia.com/");
 		store.setDefault(PreferenceConstants.PHPREPORT_USERNAME, "igalian");
 		store.setDefault(PreferenceConstants.PHPREPORT_ENABLED, "acoruna");
 	}
