@@ -43,6 +43,10 @@ public class PHPReport implements TasksTracker {
 
 	private boolean teleworking;
 
+	private ITask currentTask;
+
+	private Date startDate;
+
 	public PHPReport(String url, String username, String password,
 			boolean teleworking) {
 		this.teleworking = teleworking;
@@ -94,20 +98,26 @@ public class PHPReport implements TasksTracker {
 		return token != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.igalia.phpreport.mylyn.internal.phpreport.TasksTracker#addTask(org
-	 * .eclipse.mylyn.tasks.core.ITask, java.util.Date, java.util.Date)
-	 */
+	public void setCurrentTask (ITask task)
+	{
+		this.currentTask = task;
+		this.startDate = new Date ();
+	}
+	
 	@Override
-	public IStatus addTask(ITask task, Date begin, Date end) {
+	public boolean hasTaskPending ()
+	{
+		return currentTask != null;
+	}
+
+	public IStatus saveCurrentTask() {
 
 		if (isConnected() == false)
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
 					Messages.PHPReport_TASK_SYNC_FAILED
 							+ Messages.PHPReport_NOT_AUTHENTICATED);
+		
+		Date endDate = new Date ();
 
 		PostMethod method = new PostMethod(create_task_location.getUrl());
 		String taskXmlRepresentation = String.format(
@@ -118,10 +128,10 @@ public class PHPReport implements TasksTracker {
 						+ "<telework>%b</telework>" //$NON-NLS-1$
 						+ "<ttype>implementation</ttype>" //$NON-NLS-1$
 						+ "</task>" + "</tasks>", //$NON-NLS-1$ //$NON-NLS-2$
-				token, DateFormatUtils.ISO_DATE_FORMAT.format(begin),
-				DateFormatUtils.format(begin, "HH:mm"), //$NON-NLS-1$
-				DateFormatUtils.format(end, "HH:mm"), //$NON-NLS-1$
-				task.getUrl(), task.getSummary(), teleworking);
+				token, DateFormatUtils.ISO_DATE_FORMAT.format(this.startDate),
+				DateFormatUtils.format(this.startDate, "HH:mm"), //$NON-NLS-1$
+				DateFormatUtils.format(endDate, "HH:mm"), //$NON-NLS-1$
+				currentTask.getUrl(), currentTask.getSummary(), teleworking);
 
 		try {
 			method.setRequestEntity(new StringRequestEntity(
@@ -135,7 +145,10 @@ public class PHPReport implements TasksTracker {
 		});
 
 		PHPReportMethodResponseHandler responseHandler = new PHPReportMethodResponseHandler();
-
+		
+		currentTask = null;
+		startDate = null;
+		
 		return sendRequest(method, create_task_location, responseHandler,
 				Messages.PHPReport_TASK_SYNC_FAILED,
 				Messages.PHPReport_TASK_SYNC_SUCCESS);

@@ -1,7 +1,6 @@
 package com.igalia.phpreport.mylyn.internal.mylyn;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -16,21 +15,19 @@ import com.igalia.phpreport.mylyn.Activator;
 import com.igalia.phpreport.mylyn.internal.phpreport.TasksTracker;
 
 final class TaskActivationListener implements ITaskActivationListener {
-	private Date currentTaskBegin;
-	private TasksTracker phpReport;
+	private TasksTracker tracker;
 
 	public TaskActivationListener(TasksTracker phpReport) {
 		this();
-		this.phpReport = phpReport;
+		this.tracker = phpReport;
 	}
 
 	public TaskActivationListener() {
-		currentTaskBegin = new Date();
 	}
 
 	@Override
 	public void taskDeactivated(final ITask task) {
-		if (phpReport == null)
+		if (tracker == null)
 			return;
 
 		IWorkbench workbench = Activator.getDefault().getWorkbench();
@@ -41,8 +38,7 @@ final class TaskActivationListener implements ITaskActivationListener {
 				@Override
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
-					IStatus status = phpReport.addTask(task, currentTaskBegin,
-							new Date());
+					IStatus status = tracker.saveCurrentTask ();
 					StatusManager.getManager().handle(status);
 
 				}
@@ -54,13 +50,11 @@ final class TaskActivationListener implements ITaskActivationListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		currentTaskBegin = null;
 	}
 
 	@Override
 	public void taskActivated(ITask task) {
-		currentTaskBegin = new Date();
+		tracker.setCurrentTask(task);
 	}
 
 	@Override
@@ -75,13 +69,13 @@ final class TaskActivationListener implements ITaskActivationListener {
 
 	}
 
-	public void setPhpReport(TasksTracker phpReport) {
-		this.phpReport = phpReport;
+	public void setTracker(TasksTracker phpReport) {
+		this.tracker = phpReport;
 
 	}
 
 	public TasksTracker getTracker() {
 		// TODO Auto-generated method stub
-		return phpReport;
+		return tracker;
 	}
 }

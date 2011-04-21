@@ -87,6 +87,12 @@ public class Activator extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		System.out.println("Bundle stops");
+		if (isEnabled())
+		{
+			if (tracker.hasTaskPending())
+				tracker.saveCurrentTask();
+		}
 		super.stop(context);
 	}
 
